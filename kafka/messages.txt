@@ -1,0 +1,3 @@
+falkordb:RETURN 1
+falkordb:RETURN 2
+falkordb:CREATE (a:Artist {Name: 'Strapping Young Lad'}) RETURN a
