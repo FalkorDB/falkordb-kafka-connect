@@ -1,4 +1,13 @@
+[![Build](https://github.com/FalkorDB/falkordb-kafka-connect/actions/workflows/build.yml/badge.svg)](https://github.com/FalkorDB/falkordb-kafka-connect/actions/workflows/build.yml)
+
+#### build:
+
+```bash
 ./gradlew  shadowJar && cp ./build/libs/falkordb-kafka-connect-uber.jar ./kafka-docker/connectors
+```bash
+
+
+##### Run kafka, falkor and feed the connector:
 
 ```bash
 download-kafka.sh
