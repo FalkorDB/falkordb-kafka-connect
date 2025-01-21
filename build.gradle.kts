@@ -2,6 +2,7 @@ plugins {
     java
     id("com.github.johnrengelman.shadow") version "8.1.1"
     `maven-publish`
+    signing
 }
 
 group = "com.falkordb"
@@ -85,12 +86,10 @@ publishing {
 
     repositories {
         maven {
-            val releasesRepoUrl = uri("http://repo.company:8081/artifactory/libs-release")
-            val snapshotsRepoUrl = uri("http://repo.company:8081/artifactory/libs-snapshot")
-            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
-                username = findProperty("repo_user") as String? ?: ""
-                password = findProperty("repo_password") as String? ?: ""
+                username = project.findProperty("ossrhUsername") as String? ?: System.getenv("OSSRH_USERNAME")
+                password = project.findProperty("ossrhPassword") as String? ?: System.getenv("OSSRH_PASSWORD")
             }
         }
     }
