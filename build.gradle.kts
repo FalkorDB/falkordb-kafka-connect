@@ -11,6 +11,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+
 repositories {
     mavenCentral()
 }
@@ -36,7 +37,10 @@ tasks.test {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
+    options.compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation"))
 }
+
+
 
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     // Exclude Kafka dependencies
@@ -44,4 +48,8 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
 
     // Set the name of the resulting uber JAR
     archiveFileName.set("${project.name}-uber.jar")
+}
+
+tasks.named("build") {
+    dependsOn(tasks.named("shadowJar"))
 }

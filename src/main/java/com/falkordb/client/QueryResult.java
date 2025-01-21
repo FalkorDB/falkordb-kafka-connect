@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unchecked")
 public class QueryResult {
     @SuppressWarnings("unused")
     private static final Logger logger = LoggerFactory.getLogger(QueryResult.class);
@@ -32,9 +33,8 @@ public class QueryResult {
                     : parseStatistics(rawResponse.get(rawResponse.size() - 1));
 
         } else {
-            //noinspection unchecked
+
             header = parseHeader((List<List<Object>>) rawResponse.get(0));
-            //noinspection unchecked
             records = parseRecords((List<List<Object>>) rawResponse.get(1));
             statistics = parseStatistics(rawResponse.get(2));
         }
