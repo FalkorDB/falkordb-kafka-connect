@@ -1,25 +1,48 @@
 package com.falkordb.client;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.dynamic.RedisCommandFactory;
 
-public class Driver implements AutoCloseable{
+import java.time.Duration;
+import java.util.Collections;
+
+public class Client implements AutoCloseable{
     private final RedisClient redisClient;
     private final StatefulRedisConnection<?, ?> connection;
     private final GraphCommands graphCommands;
+    private final Cache<String, Graph> cache = Caffeine.newBuilder()
+            .maximumSize(100_000)
+            .expireAfterWrite(Duration.ofMinutes(10))
+            .build();
 
     // Private constructor
-    private Driver(Builder builder) {
+    private Client(Builder builder) {
         String url = builder.url;
         redisClient = RedisClient.create(url);
         connection = redisClient.connect();
         graphCommands = new RedisCommandFactory(connection).getCommands(GraphCommands.class);
+
     }
 
 
     public Graph graph(String graphId) {
         return new Graph(this.graphCommands, graphId);
+    }
+
+    public QueryResult execute(Query query) {
+        Graph graph = cache.get(query.graphName(), graphId -> new Graph(this.graphCommands, graphId));
+        assert graph != null;
+        var cypherCommand = query.toCacheableString();
+        return switch (query.command()) {
+            case GRAPH_QUERY -> graph.executeQuery(cypherCommand);
+            case GRAPH_DELETE -> {
+                graph.delete();
+                yield new QueryResult(Collections.emptyList(), graph, "delete graph " + query.graphName());
+            }
+        };
     }
 
     @Override
@@ -41,9 +64,9 @@ public class Driver implements AutoCloseable{
             return this;
         }
 
-        // Build method to create Driver object
-        public Driver build() {
-            return new Driver(this);
+        // Build method to create Client object
+        public Client build() {
+            return new Client(this);
         }
     }
 }

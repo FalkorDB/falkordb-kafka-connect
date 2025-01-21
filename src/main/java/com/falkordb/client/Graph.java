@@ -21,7 +21,7 @@ public class Graph {
 
     public QueryResult executeQuery(String query) {
         List<Object> rowResponse = graphCommands.graphQuery(this.graphId, query);
-        return new QueryResult(rowResponse, this, this.cache, query);
+        return new QueryResult(rowResponse, this, query);
     }
 
     public QueryResult executeQuery(String query, Map<String, Object> params) {
@@ -32,7 +32,7 @@ public class Graph {
     public QueryResult executeProcedure(String procedure, List<String> args, Map<String, List<String>> kwargs) {
         var prepareProcedure = Util.prepareProcedure(procedure, args, kwargs);
         List<Object> rowResponse = graphCommands.graphQuery(this.graphId, prepareProcedure);
-        return new QueryResult(rowResponse, this, this.cache, prepareProcedure);
+        return new QueryResult(rowResponse, this, prepareProcedure);
     }
 
     public QueryResult executeProcedure(String procedure) {
@@ -42,17 +42,6 @@ public class Graph {
     @SuppressWarnings("unused")
     public QueryResult executeProcedure(String procedure, List<String> args) {
         return executeProcedure(procedure, args, Collections.emptyMap());
-    }
-
-    public QueryResult execute(Query query) {
-        var cypherCommand = query.toCacheableString();
-        return switch (query.command()) {
-            case GRAPH_QUERY -> executeQuery(cypherCommand);
-            case GRAPH_DELETE -> {
-                delete();
-                yield new QueryResult(Collections.emptyList(), this, this.cache, "delete graph " + query.graphName());
-            }
-        };
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -73,6 +62,9 @@ public class Graph {
 //        return new QueryResult(rowResponse, this, this.cache, String.format("delete graph %s", graphId));
     }
 
+    Cache cache() {
+        return cache;
+    }
 
     @Override
     public String toString() {

@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class QueryResult {
+    @SuppressWarnings("unused")
     private static final Logger logger = LoggerFactory.getLogger(QueryResult.class);
     private final List<Object> rawResponse;
     private final Graph graph;
@@ -19,12 +20,11 @@ public class QueryResult {
     private final List<Record> records;
     private final Header header;
 
-    public QueryResult(List<Object> rawResponse, Graph graph, Cache cache, String query) {
+    public QueryResult(List<Object> rawResponse, Graph graph, String query) {
         this.rawResponse = rawResponse;
         this.graph = graph;
-        this.cache = cache;
+        this.cache = graph.cache();
         this.query = query;
-        logger.info("rawResponse: {}", rawResponse);
         if (rawResponse.size() != 3) {
             header = parseHeader(Collections.emptyList());
             records = Collections.emptyList();

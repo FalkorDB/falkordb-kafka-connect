@@ -19,27 +19,27 @@ import static org.junit.jupiter.api.Assertions.*;
 class GraphAPITest {
     private static final Logger logger = LoggerFactory.getLogger(GraphAPITest.class);
 
-    private Driver driver;
+    private Client client;
 
 
     @BeforeEach
     void setUp() {
-        driver = new Driver
+        client = new Client
                 .Builder()
                 .build();
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
         graph.delete();
     }
 
     @AfterEach
     void tearDown() {
-        driver.close();
+        client.close();
     }
 
 
     @Test
     void testCreateNode() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
         var query = "CREATE ({name:'roi',age:32})";
         QueryResult queryResult = graph.executeQuery(query);
 
@@ -55,7 +55,7 @@ class GraphAPITest {
 
     @Test
     void testCreateLabeledNode() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
         var query = "CREATE (:human{name:'danny',age:12})";
         QueryResult queryResult = graph.executeQuery(query);
 
@@ -66,7 +66,7 @@ class GraphAPITest {
 
     @Test
     void testConnectNodes() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
 
         // Create both source and destination nodes
         QueryResult result1 = graph.executeQuery("CREATE (:person{name:'roi',age:32})");
@@ -89,7 +89,7 @@ class GraphAPITest {
 
     @Test
     void testDeleteNodes() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
 
         // Create nodes
         QueryResult result1 = graph.executeQuery("CREATE (:person{name:'roi',age:32})");
@@ -130,7 +130,7 @@ class GraphAPITest {
 
     @Test
     void testDeleteRelationship() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
 
         // Create nodes and relationship
         QueryResult result1 = graph.executeQuery("CREATE (:person{name:'roi',age:32})");
@@ -156,7 +156,7 @@ class GraphAPITest {
 
     @Test
     void testIndex() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
 
         // Create both source and destination nodes
         QueryResult result1 = graph.executeQuery("CREATE (:person{name:'roi',age:32})");
@@ -187,7 +187,7 @@ class GraphAPITest {
 
     @Test
     public void testHeader() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
 
         assertNotNull(graph.executeQuery("CREATE (:person{name:'roi',age:32})"));
         assertNotNull(graph.executeQuery("CREATE (:person{name:'amit',age:30})"));
@@ -266,7 +266,7 @@ class GraphAPITest {
         params.put("boolValue", boolValue);
         params.put("doubleValue", doubleValue);
 
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
         assertNotNull(graph.executeQuery(
                 "CREATE (:person{name:$name,age:$age, doubleValue:$doubleValue, boolValue:$boolValue})", params));
         assertNotNull(graph.executeQuery("CREATE (:person{name:'amit',age:30})"));
@@ -333,7 +333,7 @@ class GraphAPITest {
 
     @Test
     public void testMultiThread() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
 
         assertNotNull(
                 graph.executeQuery("CREATE (:person {name:'roi', age:32})-[:knows]->(:person {name:'amit',age:30}) "));
@@ -417,7 +417,7 @@ class GraphAPITest {
 
     @Test
     public void testAdditionToProcedures() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
 
         assertNotNull(graph.executeQuery("CREATE (:person{name:'roi',age:32})"));
         assertNotNull(graph.executeQuery("CREATE (:person{name:'amit',age:30})"));
@@ -492,7 +492,7 @@ class GraphAPITest {
 
     @Test
     public void testEscapedQuery() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
 
         Map<String, Object> params1 = new HashMap<>();
         params1.put("s1", "S\"'");
@@ -549,7 +549,7 @@ class GraphAPITest {
         params.put("boolValue", boolValue);
         params.put("doubleValue", doubleValue);
 
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
         assertNotNull(graph.executeQuery(
                 "CREATE (:person{name:$name, age:$age, doubleValue:$doubleValue, boolValue:$boolValue})", params));
         assertNotNull(graph.executeQuery("CREATE (:person{name:'amit',age:30})"));
@@ -613,7 +613,7 @@ class GraphAPITest {
 
     @Test
     public void testArraySupport() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
 
         Node expectedANode = new Node(0, Map.of(
                 "name", new Property<>("name", "a"),
@@ -649,7 +649,7 @@ class GraphAPITest {
         assertTrue(iterator.hasNext());
         Record record = iterator.next();
         assertFalse(iterator.hasNext());
-        assertEquals(Arrays.asList("x"), record.keys());
+        assertEquals(List.of("x"), record.keys());
 
         List<Long> x = record.getValue("x");
         assertEquals(Arrays.asList(0L, 1L, 2L), x);
@@ -701,7 +701,7 @@ class GraphAPITest {
 
     @Test
     public void testNullGraphEntities() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
 
         // Create two nodes connected by a single outgoing edge.
         assertNotNull(graph.executeQuery("CREATE (:L)-[:E]->(:L2)"));
@@ -755,7 +755,7 @@ class GraphAPITest {
         long value = 1L << 40;
         Map<String, Object> params = new HashMap<>();
         params.put("val", value);
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
         QueryResult resultSet = graph.executeQuery("CREATE (n {val:$val}) RETURN n.val", params);
         assertEquals(1, resultSet.records().size());
         Record r = resultSet.records().iterator().next();
@@ -764,7 +764,7 @@ class GraphAPITest {
 
     @Test
     public void testVecf32() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
         QueryResult resultSet = graph.executeQuery("RETURN vecf32([2.1, -0.82, 1.3, 4.5]) AS vector");
         assertEquals(1, resultSet.records().size());
         Record r = resultSet.records().iterator().next();
@@ -790,7 +790,7 @@ class GraphAPITest {
 
     @Test
     public void testCachedExecution() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
         graph.executeQuery("CREATE (:N {val:1}), (:N {val:2})");
 
         // First time should not be loaded from execution cache
@@ -830,7 +830,7 @@ class GraphAPITest {
         f.put("y", (long) 2);
         expected.put("f", f);
 
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
         QueryResult resultSet = graph.executeQuery("RETURN {a:1, b:'str', c:NULL, d:[1,2,3], e:True, f:{x:1, y:2}}");
 
         assertEquals(1, resultSet.records().size());
@@ -841,7 +841,7 @@ class GraphAPITest {
 
     @Test
     public void testGeoPointLatLon() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
         QueryResult resultSet = graph.executeQuery("CREATE (:restaurant"
                 + " {location: point({latitude:30.27822306, longitude:-97.75134723})})");
         assertEquals(1, resultSet.getStatistics().nodesCreated());
@@ -851,7 +851,7 @@ class GraphAPITest {
     }
 
     private void assertTestGeoPoint() {
-        var graph = driver.graph("falkordb");
+        var graph = client.graph("falkordb");
         QueryResult results = graph.executeQuery("MATCH (restaurant) RETURN restaurant");
         assertEquals(1, results.records().size());
         Record record = results.records().iterator().next();

@@ -22,6 +22,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.5.16")
     implementation("org.springframework:spring-core:6.2.1")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

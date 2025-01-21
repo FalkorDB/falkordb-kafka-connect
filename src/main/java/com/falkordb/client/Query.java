@@ -69,19 +69,16 @@ public record Query(String graphName, GraphCommand command, String cypherCommand
     public String toCacheableString() {
         StringBuilder queryBuilder = new StringBuilder();
 
-        // Add the command type to the query
-        queryBuilder.append(command).append(" ");
 
         // Append parameters if present
         if (!parameters.isEmpty()) {
+            queryBuilder.append("CYPHER ");
             parameters.forEach((key, value) -> {
                 // Format each parameter as "key = value"
                 String formattedValue = formatValue(value);
                 queryBuilder.append(key).append(" = ").append(formattedValue).append(" ");
             });
         }
-
-        // Append the main Cypher command
         queryBuilder.append(cypherCommand);
 
         return queryBuilder.toString().trim(); // Return the final query string

@@ -22,11 +22,16 @@ public class CacheList {
     }
 
     private String getDataFromServer(int index, Graph graph) {
+        if (data.containsKey(index)) {
+            return data.get(index);
+        }
         // the value that will add all missing values and return the requested one
         List<String> newData = getAllData(graph);
         // add all missing values
         for (int i = 0; i < newData.size(); i++) {
-            data.putIfAbsent(i, newData.get(i));
+            if(i != index) {
+                data.putIfAbsent(i, newData.get(i));
+            }
         }
         // return the requested value
         if (newData.size() > index) {
