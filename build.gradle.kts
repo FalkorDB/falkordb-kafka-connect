@@ -1,6 +1,7 @@
 plugins {
     java
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    `maven-publish`
 }
 
 group = "com.falkordb"
@@ -10,7 +11,6 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
-
 
 repositories {
     mavenCentral()
@@ -40,16 +40,58 @@ tasks.withType<JavaCompile> {
     options.compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation"))
 }
 
-
-
-tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
-    // Exclude Kafka dependencies
+tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
+    archiveClassifier.set("")
     exclude("org.apache.kafka")
-
-    // Set the name of the resulting uber JAR
     archiveFileName.set("${project.name}-uber.jar")
 }
 
 tasks.named("build") {
     dependsOn(tasks.named("shadowJar"))
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            artifact(tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar").get())
+
+            pom {
+                name.set("FalkorDB Kafka Connect Redis Sink")
+                description.set("FalkorDB Kafka Connect Redis Sink.")
+                url.set("https://github.com/FalkorDB/falkordb-kafka-connect")
+
+                licenses {
+                    license {
+                        name.set("BSD 3-Clause License")
+                        url.set("https://opensource.org/license/bsd-3-clause")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("barakb")
+                        name.set("Barak Bar Orion")
+                        email.set("barak.bar@gmail.com")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:https://github.com/FalkorDB/falkordb-kafka-connect.git")
+                    developerConnection.set("scm:git:ssh://github.com/FalkorDB/falkordb-kafka-connect.git")
+                    url.set("https://github.com/FalkorDB/falkordb-kafka-connect")
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            val releasesRepoUrl = uri("http://repo.company:8081/artifactory/libs-release")
+            val snapshotsRepoUrl = uri("http://repo.company:8081/artifactory/libs-snapshot")
+            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+            credentials {
+                username = findProperty("repo_user") as String? ?: ""
+                password = findProperty("repo_password") as String? ?: ""
+            }
+        }
+    }
 }
