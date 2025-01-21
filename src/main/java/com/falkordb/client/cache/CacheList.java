@@ -17,11 +17,12 @@ public class CacheList {
         this.procedure = procedure;
     }
 
-    public String getCachedData(int index, Graph graph){
+    public String getCachedData(int index, Graph graph) {
         return data.putIfAbsent(index, getDataFromServer(index, graph));
     }
 
     private String getDataFromServer(int index, Graph graph) {
+
         if (data.containsKey(index)) {
             return data.get(index);
         }
@@ -29,9 +30,7 @@ public class CacheList {
         List<String> newData = getAllData(graph);
         // add all missing values
         for (int i = 0; i < newData.size(); i++) {
-            if(i != index) {
-                data.putIfAbsent(i, newData.get(i));
-            }
+            data.put(i, newData.get(i));
         }
         // return the requested value
         if (newData.size() > index) {

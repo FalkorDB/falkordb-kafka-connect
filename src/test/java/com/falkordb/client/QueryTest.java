@@ -81,7 +81,7 @@ class QueryTest {
         Query query = new Query("myGraph", GraphCommand.GRAPH_QUERY,
                 "MATCH (p:Person {name: $name_param}) RETURN p", params);
 
-        String expectedCacheableString = "GRAPH_QUERY name_param = 'Niccolò Machiavelli' MATCH (p:Person {name: $name_param}) RETURN p";
+        String expectedCacheableString = "CYPHER name_param = 'Niccolò Machiavelli' MATCH (p:Person {name: $name_param}) RETURN p";
 
         assertEquals(expectedCacheableString, query.toCacheableString());
     }
