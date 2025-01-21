@@ -42,11 +42,12 @@ The format of the json is:
 
 
 ##### how to build locally  
-
+This project use [sdkman](https://sdkman.io/) to manage multiple java versions, you can install it using the following command: `curl -s "https://get.sdkman.io" | bash`
+Once installed you can use `sdk env` cmd in the terminal to select the right java sdk for this project.
+After that you can build the project using the following command:
 ```bash
 ./gradlew build
 ```
-
 
 ##### How to run the example
 There are a few scripts that can be used to run the example. The scripts are located in the `example` directory.
