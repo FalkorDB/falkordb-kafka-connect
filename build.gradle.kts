@@ -63,8 +63,8 @@ publishing {
 
                 licenses {
                     license {
-                        name.set("BSD 3-Clause License")
-                        url.set("https://opensource.org/license/bsd-3-clause")
+                        name.set("MIT License")
+                        url.set("https://opensource.org/licenses/MIT")
                     }
                 }
 
