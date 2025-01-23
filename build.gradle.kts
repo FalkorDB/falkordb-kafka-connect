@@ -14,6 +14,7 @@ java {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -51,6 +52,22 @@ tasks.named("build") {
     dependsOn(tasks.named("shadowJar"))
 }
 
+tasks.register<Jar>("javadocJar") {
+    archiveClassifier.set("javadoc")
+    from(tasks.named("javadoc"))
+}
+
+tasks.register<Jar>("sourcesJar") {
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
+}
+
+artifacts {
+    add("archives", tasks.named("javadocJar"))
+    add("archives", tasks.named("sourcesJar"))
+}
+
+// Define publishing block before signing
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
@@ -75,8 +92,9 @@ publishing {
                         email.set("barak.bar@gmail.com")
                     }
                 }
+
                 scm {
-                    connection.set("scm:git:https://github.com/FalkorDB/falkordb-kafka-connect.git")
+                    connection.set("scm:git:git://github.com/FalkorDB/falkordb-kafka-connect.git")
                     developerConnection.set("scm:git:ssh://github.com/FalkorDB/falkordb-kafka-connect.git")
                     url.set("https://github.com/FalkorDB/falkordb-kafka-connect")
                 }
@@ -86,11 +104,24 @@ publishing {
 
     repositories {
         maven {
-            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            val releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            val snapshotRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            url = uri(if (version.toString().endsWith("-SNAPSHOT")) snapshotRepoUrl else releasesRepoUrl)
+
             credentials {
                 username = project.findProperty("ossrhUsername") as String? ?: System.getenv("OSSRH_USERNAME")
                 password = project.findProperty("ossrhPassword") as String? ?: System.getenv("OSSRH_PASSWORD")
             }
         }
     }
+}
+
+// Signing block should come after publication creation
+signing {
+    sign(publishing.publications["mavenJava"])
+}
+
+// Ensure publish task depends on shadowJar task
+tasks.named("publish") {
+    dependsOn(tasks.named("shadowJar"))
 }
