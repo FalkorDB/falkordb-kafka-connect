@@ -16,7 +16,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Publish package
-        run: ./gradlew publish
+        run: ./gradlew --debug publish
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}

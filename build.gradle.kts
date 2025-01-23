@@ -117,9 +117,9 @@ publishing {
 }
 
 // Signing block should come after publication creation
-//signing {
-//    sign(publishing.publications["mavenJava"])
-//}
+signing {
+    sign(publishing.publications["mavenJava"])
+}
 
 // Ensure publish task depends on shadowJar task
 tasks.named("publish") {
