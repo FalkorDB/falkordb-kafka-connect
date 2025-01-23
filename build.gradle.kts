@@ -118,10 +118,14 @@ publishing {
 
 // Signing block should come after publication creation
 signing {
-//    useInMemoryPgpKeys(
-//        project.findProperty("ORG_GRADLE_PROJECT_signingKey") as String?,
-//        project.findProperty("ORG_GRADLE_PROJECT_signingPassword") as String?
-//    )
+    val signingKey: String? = project.findProperty("ORG_GRADLE_PROJECT_signingKey") as String?
+    val signingPassword: String? = project.findProperty("ORG_GRADLE_PROJECT_signingPassword") as String?
+    println("signingKey: $signingKey")
+    println("signingPassword: $signingPassword")
+    useInMemoryPgpKeys(
+        signingKey,
+        signingPassword
+    )
     sign(publishing.publications["mavenJava"])
 }
 
