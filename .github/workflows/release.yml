@@ -15,6 +15,9 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.OSSH_GPG_SECRET_KEY }}" | gpg --import --batch --yes --passphrase "${{ secrets.OSSH_GPG_SECRET_KEY_PASSWORD }}"
       - name: Publish package
         run: ./gradlew --debug publish
         env:
