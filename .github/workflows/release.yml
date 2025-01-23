@@ -18,6 +18,11 @@ jobs:
       - name: Import GPG key
         run: |
           echo "${{ secrets.OSSH_GPG_SECRET_KEY }}" | gpg --import --batch --yes --passphrase "${{ secrets.OSSH_GPG_SECRET_KEY_PASSWORD }}"
+      - name: print GPG version and the location of the keyring
+        run: |
+          gpg --version
+          gpg --list-secret-keys
+          ls -la ~/.gnupg/
       - name: Publish package
         run: ./gradlew  --stacktrace publish
         env:
