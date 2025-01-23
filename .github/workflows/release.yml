@@ -19,9 +19,9 @@ jobs:
         run: |
           echo "${{ secrets.OSSH_GPG_SECRET_KEY }}" | gpg --import --batch --yes --passphrase "${{ secrets.OSSH_GPG_SECRET_KEY_PASSWORD }}"
       - name: Publish package
-        run: ./gradlew --debug publish
+        run: ./gradlew publish
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.OSSH_GPG_SECRET_KEY }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.OSSH_GPG_SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.OSSH_GPG_SECRET_KEY_PASSWORD }}
