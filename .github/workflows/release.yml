@@ -19,7 +19,7 @@ jobs:
         run: |
           echo "${{ secrets.OSSH_GPG_SECRET_KEY }}" | gpg --import --batch --yes --passphrase "${{ secrets.OSSH_GPG_SECRET_KEY_PASSWORD }}"
       - name: Publish package
-        run: ./gradlew publish
+        run: ./gradlew  --stacktrace publish
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
