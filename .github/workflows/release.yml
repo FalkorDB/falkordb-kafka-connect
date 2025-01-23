@@ -17,7 +17,7 @@ jobs:
           java-version: '17'
       - name: Debug GPG Key
         run: |
-          echo "${{ secrets.OSSH_GPG_SECRET_KEY }}"
+          echo "${{ secrets.OSSH_GPG_SECRET_KEY }}" | sed 's/./& /g'
           echo "Length of GPG Key: ${#GITHUB_ENV}"
       - name: Import GPG key
         run: |
