@@ -47,7 +47,7 @@ The format of the json is:
 
 
 ##### how to get dependency from Maven/Gradle alternatively how to get the last version of the fat jar
-
+You can build it locally (explain below) or download the fat jar from github  [release](https://github.com/FalkorDB/falkordb-kafka-connect/releases/download/v1.0.0/falkordb-kafka-connect-uber.jar) 
 
 ##### how to build locally  
 This project use [sdkman](https://sdkman.io/) to manage multiple java versions, you can install it using the following command: `curl -s "https://get.sdkman.io" | bash`
