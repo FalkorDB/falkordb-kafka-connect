@@ -1,3 +1,6 @@
+
+![FalkorDB x Kafka Connect Banner](https://github.com/user-attachments/assets/a2c519ae-b817-4091-8ee6-1763a69b87c9)
+
 [![Build](https://github.com/FalkorDB/falkordb-kafka-connect/actions/workflows/build.yml/badge.svg)](https://github.com/FalkorDB/falkordb-kafka-connect/actions/workflows/build.yml)
 [![license](https://img.shields.io/github/license/falkordb/falkordb-kafka-connect.svg)](https://github.com/falkordb/falkordb-kafka-connect)
 [![Forum](https://img.shields.io/badge/Forum-falkordb-blue)](https://github.com/orgs/FalkorDB/discussions)
