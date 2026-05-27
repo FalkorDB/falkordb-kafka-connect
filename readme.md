@@ -4,7 +4,7 @@
 [![Build](https://github.com/FalkorDB/falkordb-kafka-connect/actions/workflows/build.yml/badge.svg)](https://github.com/FalkorDB/falkordb-kafka-connect/actions/workflows/build.yml)
 [![license](https://img.shields.io/github/license/falkordb/falkordb-kafka-connect.svg)](https://github.com/falkordb/falkordb-kafka-connect)
 [![Forum](https://img.shields.io/badge/Forum-falkordb-blue)](https://github.com/orgs/FalkorDB/discussions)
-[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E)
+[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/6M4QwDXn2w)
 [![Codecov](https://codecov.io/gh/falkordb/falkordb-kafka-connect/branch/main/graph/badge.svg)](https://codecov.io/gh/falkordb/falkordb-kafka-connect)
 [![Release](https://img.shields.io/github/release/falkordb/falkordb-kafka-connect.svg)](https://github.com/falkordb/falkordb-kafka-connect/releases/latest)
 [![Javadocs](https://www.javadoc.io/badge/com.falkordb/falkordb-kafka-connect.svg)](https://www.javadoc.io/doc/com.falkordb/falkordb-kafka-connect)
